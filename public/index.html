@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Network Hub</title>
+    <!-- Favicon for maximum compatibility -->
+    <link rel="icon" href="favicon.ico" sizes="16x16" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" sizes="32x32" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.svg" sizes="any" type="image/svg+xml">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon.ico">
+    
+    <!-- Traditional fallback -->
+    <link rel="icon" href="favicon.ico">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <canvas id="webBackground" class="web-background"></canvas>
+    <div id="mainPage" class="container">
+        <header class="title-header">
+            <div class="title-content">
+                <div class="title-section">
+                    <h1 class="main-title" id="mainTitle">Local Network Hub</h1>
+                    <p class="title-subtitle" id="homepageMessage">Welcome to your local network hub</p>
+                </div>
+                <div class="navigation-section" id="navigationSection">
+                    <!-- Navigation links will be inserted here -->
+                </div>
+            </div>
+        </header>
+
+        <main class="content">
+            <div class="links-list" id="linksList">
+                <!-- Dynamic links will be inserted here -->
+            </div>
+            
+            <div class="code-snippet-container" id="codeSnippetContainer">
+                <!-- Code snippet will be inserted here -->
+            </div>
+        </main>
+
+        <footer class="main-footer">
+            <a href="/#admin" class="admin-access-btn">⚙️ Admin</a>
+        </footer>
+
+    </div>
+
+    <!-- Admin Page -->
+    <div id="adminPage" class="admin-page hidden">
+        <div class="container">
+            <header class="splash-screen">
+                <h1 class="title" id="adminTitle">Local Network Hub</h1>
+                <p class="subtitle">admin settings</p>
+            </header>
+            
+            <div class="admin-content">
+                <div id="loginForm" class="admin-form">
+                    <h3>Admin Login</h3>
+                    <input type="password" id="adminPassword" placeholder="Enter admin password">
+                    <button onclick="adminLogin()">Login</button>
+                </div>
+
+                <div id="adminPanel" class="admin-form hidden">
+                    <!-- Tab Navigation -->
+                    <div class="admin-tabs">
+                        <button class="admin-tab active" onclick="switchAdminTab(event, 'adminLinksTab')">Admin Links</button>
+                        <button class="admin-tab" onclick="switchAdminTab(event, 'settingsTab')">Settings</button>
+                        <button class="admin-tab" onclick="switchAdminTab(event, 'projectTab')">Project</button>
+                    </div>
+
+                    <!-- Admin Links Tab -->
+                    <div id="adminLinksTab" class="admin-tab-content active">
+                        <div id="privateLinksSection" class="private-links-section">
+                            <div id="privateLinksContainer" class="links-list">
+                                <!-- Private links will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Settings Tab -->
+                    <div id="settingsTab" class="admin-tab-content">
+                        <div class="site-title-form">
+                            <h4>Site Title</h4>
+                            <input type="text" id="siteTitleInput" placeholder="Enter site title (e.g., Local Network Hub)">
+                            <button onclick="updateSiteTitle()">Update Title</button>
+                        </div>
+                        
+                        <div class="homepage-message-form">
+                            <h4>Homepage Message</h4>
+                            <textarea id="homepageMessageInput" placeholder="Enter homepage message&#10;&#10;Formatting tips:&#10;**bold text** for bold&#10;*italic text* for italics&#10;Line breaks create paragraphs" rows="4"></textarea>
+                            <button onclick="updateHomepageMessage()">Update Message</button>
+                        </div>
+                        
+                        <div class="category-form">
+                            <h4>Categories</h4>
+                            <input type="text" id="categoryName" placeholder="Category Name">
+                            <button onclick="addCategory()">+ Add Category</button>
+                            <div class="existing-categories">
+                                <div id="adminCategoriesList"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="add-link-form">
+                            <h4>Add New Link</h4>
+                            <input type="text" id="linkName" placeholder="Link Name">
+                            <input type="url" id="linkUrl" placeholder="http://example.com">
+                            <select id="linkCategory">
+                                <option value="">No Category</option>
+                            </select>
+                            <button onclick="addLink()">+ Add Link</button>
+                        </div>
+                        
+                        <div class="chat-config-form">
+                            <h4>AI Chat Configuration</h4>
+                            <div class="provider-selection">
+                                <label for="aiProvider">AI Provider:</label>
+                                <select id="aiProvider" onchange="toggleAiProvider()">
+                                    <option value="none">None</option>
+                                    <option value="flowise">Flowise</option>
+                                    <option value="ollama">Ollama</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Flowise Configuration -->
+                            <div id="flowiseConfig" class="ai-config-section">
+                                <div class="config-field">
+                                    <label>Flowise API URL:</label>
+                                    <input type="url" id="chatApiUrl" placeholder="API URL (e.g., http://FlowiseURL.local:12345/api/v1/prediction/...)">
+                                </div>
+                                <div class="config-field">
+                                    <label>Chatflow ID:</label>
+                                    <input type="text" id="chatflowId" placeholder="Chatflow ID (e.g., 7f2c8b9e-3d45-4a17-9e8f-2b56c847d1a3)">
+                                </div>
+                            </div>
+                            
+                            <!-- Ollama Configuration -->
+                            <div id="ollamaConfig" class="ai-config-section hidden">
+                                <div class="config-field">
+                                    <label>Ollama Base URL:</label>
+                                    <input type="url" id="ollamaBaseUrl" placeholder="Base URL (e.g., https://pierai.tunell.live or http://localhost:11434)">
+                                </div>
+                                <div class="config-field">
+                                    <label>Available Models:</label>
+                                    <div class="model-selection">
+                                        <button type="button" onclick="fetchOllamaModels()">Check Available Models</button>
+                                        <select id="ollamaModel" class="hidden">
+                                            <option value="">Select a model...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button onclick="updateChatConfig()">Update Chat Config</button>
+                        </div>
+                        
+                        <div class="filter-config-form">
+                            <h4>Response Filter</h4>
+                            <div class="toggle-container">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="filterEnabled">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span>Enable response filtering</span>
+                            </div>
+                            <input type="text" id="filterKeyword" placeholder="Filter keyword (e.g., &lt;/think&gt;)">
+                            <button onclick="updateFilterConfig()">Update Filter Config</button>
+                        </div>
+                        
+                        <div class="color-config-form">
+                            <h4>Site Theme Color</h4>
+                            <div class="color-input-container">
+                                <input type="color" id="primaryColorPicker" value="#330099">
+                                <input type="text" id="primaryColorText" placeholder="#330099" maxlength="7">
+                            </div>
+                            <button onclick="updateColorConfig()">Update Site Color</button>
+                        </div>
+                        
+                        <div class="existing-links">
+                            <h4>Existing Links</h4>
+                            <div id="adminLinksList"></div>
+                        </div>
+                    </div>
+
+                    <!-- Project Tab -->
+                    <div id="projectTab" class="admin-tab-content">
+                        <div class="project-manager">
+                            <div class="project-sidebar">
+                                <h4>Project Files</h4>
+                                <div id="projectFileList" class="project-file-list"></div>
+                                <button onclick="createNewProjectFile()">+ New File</button>
+                            </div>
+                            <div class="project-editor">
+                                <input type="text" id="projectTitle" placeholder="Project title" class="form-input" />
+                                <div id="projectEditor" contenteditable="true" class="rich-editor" style="height:400px;"></div>
+                                <div id="editorToolbar" class="markdown-toolbar">
+                                    <button type="button" onmousedown="formatDoc(event, 'bold')"><strong>B</strong></button>
+                                    <button type="button" onmousedown="formatDoc(event, 'italic')"><em>I</em></button>
+                                    <button type="button" onmousedown="formatDoc(event, 'insertUnorderedList')">•</button>
+                                    <button type="button" onmousedown="formatDoc(event, 'insertOrderedList')">1.</button>
+                                    <button type="button" onmousedown="changeFontSize(event, -1)">A-</button>
+                                    <button type="button" onmousedown="changeFontSize(event, 1)">A+</button>
+                                </div>
+                                <div class="project-editor-actions">
+                                    <button onclick="saveProjectFile()" class="btn btn-primary">Save</button>
+                                    <button onclick="deleteProjectFile()" class="btn btn-danger">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="admin-section">
+                <a href="/" class="admin-btn">← Back to Home</a>
+                <button onclick="adminLogout()" class="admin-btn logout-btn">Logout</button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Global Feedback Toast -->
+    <div id="globalFeedback" class="global-feedback hidden">
+        <span id="feedbackMessage"></span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/turndown/dist/turndown.min.js"></script>
+    <script src="script.js"></script>
+    <script src="web-animation.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .outer-circle { fill: #330099; }
+      .inner-circle { fill: #0a0a0a; }
+    </style>
+  </defs>
+  <!-- Purple outer circle -->
+  <circle cx="16" cy="16" r="16" class="outer-circle"/>
+  <!-- Black inner circle -->
+  <circle cx="16" cy="16" r="8" class="inner-circle"/>
+</svg>

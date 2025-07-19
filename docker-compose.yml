@@ -1,0 +1,13 @@
+services:
+  ServerHomePage:
+    build: .
+    image: serverhomepage
+    ports:
+      - "7111:3000"
+    volumes:
+      - ~/ServerCrate/data:/app/data
+    environment:
+      - NODE_ENV=production
+      - ADMIN_PASSWORD=Heroin102
+    restart: unless-stopped
+    container_name: ServerCrate

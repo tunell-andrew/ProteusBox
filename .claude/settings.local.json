@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker container stop:*)",
+      "Bash(docker container rm:*)",
+      "Bash(docker compose build:*)",
+      "Bash(docker compose:*)"
+    ],
+    "deny": []
+  }
+}
