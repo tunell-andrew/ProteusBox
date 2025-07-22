@@ -4,6 +4,8 @@ ServerCrate is a lightweight, Docker-packaged **local-network hub** that brings 
 - It is *in my opinion* a big improvement from Heimendal, which I was prevously using.
 - It serves all the same functionality, but with more customizability and AI features! 'COOL'
 
+  https://youtu.be/3tfmctFeWUw
+
 -- Features --
 * 📂  Categorised link dashboard – organise internal services and external sites into filterable categories.
 * 🤖  AI Assistant – chat with either **Flowise** (default) or **Ollama** models right from the home page.
