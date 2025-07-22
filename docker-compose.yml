@@ -8,6 +8,6 @@ services:
       - ~/ServerCrate/data:/app/data
     environment:
       - NODE_ENV=production
-      - ADMIN_PASSWORD=Heroin102
+      - ADMIN_PASSWORD=EnterPasswordHere
     restart: unless-stopped
     container_name: ServerCrate

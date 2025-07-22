@@ -155,6 +155,17 @@ body {
 
 /* Removed gradientShift animation for static background */
 
+/* Web Background Canvas */
+.web-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -10;
+    pointer-events: none;
+}
+
 /* Glass Container */
 .glass-container {
     background: var(--glass-bg);
@@ -723,97 +734,206 @@ body {
     box-shadow: var(--shadow-lg);
 }
 
-/* Admin Page Styles */
+/* ====================================== */
+/* MODERN ADMIN PAGE REDESIGN */
+/* ====================================== */
+
 .admin-page {
     min-height: 100vh;
-    background: var(--primary-bg);
+    background: linear-gradient(135deg,
+        var(--animation-bg) 0%,
+        var(--primary-bg) 50%,
+        var(--secondary-bg) 100%
+    );
+    padding: var(--spacing-md) 0;
+    position: relative;
+    z-index: 1; /* Ensure admin content is above background canvas */
 }
 
 .admin-page .container {
-    max-width: 1000px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+    min-height: unset;
 }
 
-/* Admin Tabs */
+/* Admin Panel Structure */
+.admin-form {
+    background: none;
+    backdrop-filter: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+    max-width: none;
+}
+
+/* Modern Tab Navigation */
 .admin-tabs {
     display: flex;
     gap: var(--spacing-xs);
-    margin-bottom: 0;
-    background: var(--glass-bg);
+    margin-bottom: var(--spacing-lg);
+    background: var(--glass-bg-02);
     backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
-    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
-    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-xs);
     box-shadow: var(--shadow-md);
+    overflow-x: auto;
 }
 
 .admin-tab {
+    flex: 1;
     background: transparent;
     border: none;
-    color: var(--text-muted);
-    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--text-primary);
+    padding: var(--spacing-md) var(--spacing-lg);
     cursor: pointer;
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 600;
     border-radius: var(--border-radius);
     transition: all var(--transition-normal);
-    font-family: var(--font-family-mono);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    position: relative;
-    overflow: hidden;
-}
-
-.admin-tab::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: var(--gradient-accent);
-    transform: scaleX(0);
-    transition: transform var(--transition-normal);
+    font-family: var(--font-family-primary);
+    text-transform: none;
+    letter-spacing: 0;
+    white-space: nowrap;
+    min-width: 120px;
 }
 
 .admin-tab:hover {
     background: var(--glass-bg-05);
-    color: var(--text-secondary);
+    color: var(--text-primary);
 }
 
 .admin-tab.active {
-    background: var(--gradient-accent);
+    background: var(--gradient-primary);
     color: var(--text-primary);
     box-shadow: var(--shadow-sm);
 }
 
-.admin-tab.active::before {
-    transform: scaleX(1);
-}
-
+/* Tab Content Areas */
 .admin-tab-content {
     display: none;
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
-    border-top: none;
-    border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
-    padding: var(--spacing-xl);
-    box-shadow: var(--shadow-lg);
-    min-height: 500px;
+    animation: fadeIn 0.3s ease-in-out;
 }
 
 .admin-tab-content.active {
     display: block;
 }
 
-/* Admin Forms */
-.admin-form {
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ====================================== */
+/* MODERN FORM SYSTEM */
+/* ====================================== */
+
+/* Form Cards - Consistent containers for all forms */
+.form-card {
     background: var(--glass-bg);
     backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
     border-radius: var(--border-radius-lg);
     padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-normal);
+}
+
+.form-card:hover {
     box-shadow: var(--shadow-lg);
+    border-color: var(--glass-bg-15);
+}
+
+.form-card h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 var(--spacing-md) 0;
+    font-family: var(--font-family-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+/* Form Components */
+.form-row {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: flex-end;
+    margin-bottom: var(--spacing-md);
+}
+
+.form-row .form-input {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.form-group {
+    margin-bottom: var(--spacing-md);
+}
+
+.form-input {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--glass-bg-05);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    font-family: var(--font-family-primary);
+    transition: all var(--transition-normal);
+    margin-bottom: var(--spacing-sm);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background: var(--glass-bg-08);
+    box-shadow: 0 0 0 3px var(--primary-background);
+}
+
+.form-input::placeholder {
+    color: var(--text-muted);
+}
+
+.form-btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--glass-bg-10);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    min-width: 120px;
+}
+
+.form-btn:hover {
+    background: var(--glass-bg-15);
+    border-color: var(--primary-color);
+    color: var(--text-primary);
+}
+
+.form-btn-primary {
+    background: var(--gradient-primary);
+    color: var(--text-primary);
+    border-color: transparent;
+}
+
+.form-btn-primary:hover {
+    background: var(--gradient-secondary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.form-divider {
+    height: 1px;
+    background: var(--glass-border);
+    margin: var(--spacing-lg) 0;
 }
 
 .admin-form h3 {
@@ -1703,18 +1823,23 @@ body {
 }
 
 
-/* Admin Footer */
+/* ====================================== */
+/* ADMIN FOOTER */
+/* ====================================== */
+
 .admin-section {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: var(--spacing-md);
     padding: var(--spacing-lg);
-    margin-top: var(--spacing-xl);
+    margin-top: var(--spacing-2xl);
     background: var(--glass-bg-02);
     border: 1px solid var(--glass-border);
     border-radius: var(--border-radius-lg);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
+    box-shadow: var(--shadow-md);
+    position: relative;
 }
 
 .admin-btn {
@@ -1753,117 +1878,134 @@ body {
     background: linear-gradient(135deg, var(--inverted-color) 30%, var(--warning-color) 100%);
 }
 
-/* Responsive Design */
+/* ====================================== */
+/* RESPONSIVE DESIGN */
+/* ====================================== */
+
 @media (max-width: 768px) {
-    .title-header {
-        padding: var(--spacing-md) 0;
-    }
-    
-    .title-content {
-        padding: 0 var(--spacing-md);
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: var(--spacing-sm);
-    }
-    
-    .title-section {
-        text-align: center;
-    }
-    
-    .navigation-section {
-        width: 100%;
-        justify-content: center;
-    }
-    
-    .nav-links-container {
-        justify-content: center;
-    }
-    
-    .container {
-        padding: 140px var(--spacing-md) var(--spacing-md);
-        gap: var(--spacing-lg);
-    }
-    
-    .title {
-        font-size: clamp(2rem, 6vw, 3rem);
-    }
-    
-    .subtitle {
-        font-size: 1rem;
-    }
-    
-    .links-list {
-        gap: var(--spacing-lg);
-    }
-    
-    .link-item {
+    /* Main Layout */
+    .admin-page .container {
         padding: var(--spacing-md);
-        flex-direction: column;
-        align-items: stretch;
-        gap: var(--spacing-md);
     }
     
-    .link-content {
-        max-width: 100%;
-    }
-    
-    .link-name {
-        font-size: 1.125rem;
-    }
-    
-    .link-url {
-        font-size: 0.8rem;
-    }
-    
-    .redirect-btn {
-        padding: var(--spacing-md) var(--spacing-lg);
-        min-height: 50px;
-        font-size: 1rem;
-        width: 100%;
-    }
-    
+    /* Tab Navigation */
     .admin-tabs {
-        flex-wrap: wrap;
+        padding: var(--spacing-xs);
         gap: var(--spacing-xs);
     }
     
     .admin-tab {
-        padding: var(--spacing-xs) var(--spacing-sm);
+        padding: var(--spacing-sm) var(--spacing-md);
         font-size: 0.75rem;
+        min-width: 100px;
     }
     
-    .admin-tab-content {
-        padding: var(--spacing-lg);
+    /* Form Cards */
+    .form-card {
+        padding: var(--spacing-md);
+        margin-bottom: var(--spacing-md);
     }
     
-    .chatbox-container {
-        height: 400px;
-        margin: var(--spacing-md) 0;
+    .form-row {
+        flex-direction: column;
+        align-items: stretch;
     }
     
-    .response-video {
-        max-width: 100%;
+    .form-row .form-input {
+        margin-bottom: var(--spacing-sm);
     }
     
-    .main-footer {
-        position: relative;
-        bottom: auto;
-        right: auto;
-        text-align: center;
-        margin-top: var(--spacing-xl);
+    /* Project Manager Mobile */
+    .project-manager {
+        min-height: 500px;
+        max-height: 70vh;
     }
     
+    .project-files-header {
+        padding: var(--spacing-md);
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-sm);
+    }
+    
+    .project-file-list {
+        padding: var(--spacing-sm);
+        max-height: 60px;
+    }
+    
+    .project-file-btn {
+        font-size: 0.7rem;
+        padding: var(--spacing-xs);
+    }
+    
+    .project-editor-area {
+        padding: var(--spacing-md);
+        gap: var(--spacing-sm);
+    }
+    
+    .rich-editor {
+        min-height: 200px;
+        font-size: 0.8rem;
+        padding: var(--spacing-sm);
+    }
+    
+    .markdown-toolbar {
+        padding: var(--spacing-xs);
+        gap: var(--spacing-xs);
+        justify-content: center;
+    }
+    
+    .markdown-toolbar button {
+        min-width: 28px;
+        font-size: 0.7rem;
+    }
+    
+    .project-editor-actions {
+        justify-content: center;
+        gap: var(--spacing-md);
+    }
+    
+    .project-action-btn {
+        flex: 1;
+        max-width: 120px;
+    }
+    
+    /* Admin Footer */
     .admin-section {
         flex-direction: column;
         gap: var(--spacing-md);
         padding: var(--spacing-md);
+        margin-top: var(--spacing-lg);
     }
     
     .admin-btn {
         width: 100%;
         justify-content: center;
-        padding: var(--spacing-md);
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-page .container {
+        padding: var(--spacing-sm);
+    }
+    
+    .form-card {
+        padding: var(--spacing-sm);
+    }
+    
+    .project-manager {
+        min-height: 400px;
+        max-height: 60vh;
+    }
+    
+    .rich-editor {
+        min-height: 150px;
+        font-size: 0.75rem;
+    }
+    
+    .project-action-btn {
+        font-size: 0.75rem;
+        padding: var(--spacing-xs) var(--spacing-sm);
     }
 }
 
@@ -1951,85 +2093,175 @@ body {
     color: var(--text-primary);
 }
 
-.markdown-toolbar{
-    display:flex;
-    gap:6px;
-    margin-top:6px;
-}
-.markdown-toolbar button{
-    padding:4px 6px;
-    font-size:0.8rem;
-    background:var(--glass-bg);
-    border:1px solid var(--glass-border);
-    border-radius:4px;
-    cursor:pointer;
-    transition:background var(--transition-fast);
-}
-.markdown-toolbar button:hover{
-    background:var(--glass-bg-08);
+/* Old markdown and rich-editor styles removed - using new modern design */
+
+/* Old project file styles removed - using new modern design */
+
+/* ====================================== */
+/* FIXED PROJECT MANAGER */
+/* ====================================== */
+
+.project-manager {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    min-height: 600px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    padding: 0;
+    box-shadow: var(--shadow-md);
 }
 
-.rich-editor{
-    padding:6px;
-    border:1px solid var(--glass-border);
-    border-radius:4px;
-    background:var(--glass-bg);
-    overflow-y:auto;
-    white-space:pre-wrap;
+.project-sidebar {
+    width: 100%;
+    flex-shrink: 0;
+    background: var(--glass-bg-02);
+    border-bottom: 1px solid var(--glass-border);
+    padding: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
 }
 
-.project-file-list{
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-    margin-bottom:8px;
-}
-.project-file-btn{
-    width:calc(100% - 12px); /* slightly narrower */
-    margin-left:6px;
-    height:18px;
-    padding:0 6px;
-    background:var(--glass-bg-15); /* darker glass */
-    border:1px solid var(--primary-color); /* accent border */
-    border-radius:4px;
-    cursor:pointer;
-    transition:background var(--transition-fast), border var(--transition-fast);
-    text-align:left;
-    font-size:0.75rem;
-    line-height:1.2;
-    color:var(--primary-color);
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-.project-file-btn:hover{
-    background:var(--glass-bg-20);
-}
-.project-file-btn.active{
-    background:var(--glass-bg);
-    border-color:var(--primary-light);
+.project-sidebar h4 {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
-/* === FINAL style for project-file buttons (overrides everything) === */
-#projectFileList .project-file-btn{
-    width:90% !important;
-    margin:4px auto !important;
-    padding:2px 6px !important;
-    height:20px !important;
-    background:var(--glass-bg-10) !important;
-    border:1px solid var(--glass-border) !important;
-    color:var(--text-secondary) !important;
-    font-size:0.75rem !important;
-    line-height:1.2 !important;
-    white-space:nowrap !important;
-    overflow:hidden !important;
-    text-overflow:ellipsis !important;
+.project-sidebar button {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    background: var(--glass-bg-05);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    font-size: 0.75rem;
+    font-weight: 500;
+    width: fit-content;
 }
-#projectFileList .project-file-btn:hover{
-    background:var(--glass-bg-20) !important;
+
+.project-sidebar button:hover {
+    background: var(--glass-bg-10);
+    border-color: var(--primary-color);
+    color: var(--text-primary);
 }
-#projectFileList .project-file-btn.active{
-    background:var(--glass-bg) !important;
-    border-color:var(--primary-color) !important;
-    color:var(--primary-color) !important;
+
+.project-editor {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    min-height: 0;
+}
+
+/* Rich Editor */
+.rich-editor {
+    flex: 1;
+    min-height: 300px;
+    padding: var(--spacing-md);
+    background: var(--glass-bg-02);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    color: var(--text-primary);
+    font-family: var(--font-family-primary);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    overflow-y: auto;
+    resize: none;
+    transition: all var(--transition-normal);
+}
+
+.rich-editor:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background: var(--glass-bg-05);
+    box-shadow: 0 0 0 3px var(--primary-background);
+}
+
+/* Toolbar - positioned BELOW the textbox */
+.markdown-toolbar {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-xs);
+    flex-wrap: nowrap;
+    padding: var(--spacing-sm);
+    background: var(--glass-bg-02);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    order: 3; /* Ensures it comes after the rich editor */
+    align-items: center;
+}
+
+.markdown-toolbar button {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--glass-bg-05);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    min-width: 28px;
+    height: 28px;
+}
+
+.markdown-toolbar button:hover {
+    background: var(--glass-bg-10);
+    border-color: var(--primary-color);
+    color: var(--text-primary);
+}
+
+/* File List */
+.project-file-list {
+    display: flex;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+.project-file-btn {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--glass-bg-08);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    white-space: nowrap;
+    height: fit-content;
+}
+
+.project-file-btn:hover {
+    background: var(--glass-bg-15);
+    border-color: var(--primary-color);
+    color: var(--text-primary);
+}
+
+.project-file-btn.active {
+    background: var(--gradient-accent);
+    border-color: var(--primary-color);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Action Buttons */
+.project-editor-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    justify-content: flex-start;
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--glass-border);
+    order: 4; /* Ensures it comes last */
 }

@@ -4,7 +4,9 @@
       "Bash(docker container stop:*)",
       "Bash(docker container rm:*)",
       "Bash(docker compose build:*)",
-      "Bash(docker compose:*)"
+      "Bash(docker compose:*)",
+      "Bash(node:*)",
+      "Bash(curl:*)"
     ],
     "deny": []
   }

@@ -1,6 +1,14 @@
 class WebAnimation {
     constructor(canvasId) {
+        console.log('WebAnimation constructor called with canvasId:', canvasId);
         this.canvas = document.getElementById(canvasId);
+        console.log('Canvas element found:', !!this.canvas);
+        
+        if (!this.canvas) {
+            console.error('Canvas not found with ID:', canvasId);
+            return;
+        }
+        
         this.ctx = this.canvas.getContext('2d');
         this.nodes = [];
         this.connections = [];
@@ -16,9 +24,14 @@ class WebAnimation {
         };
         
         this.init();
-        this.createNodes();
         this.updateColorsFromCSS();
-        this.animate();
+        
+        // Delay node creation until canvas is properly sized
+        setTimeout(() => {
+            this.createNodes();
+            this.animate();
+            console.log('Animation started for canvas:', canvasId);
+        }, 50);
         
         window.addEventListener('resize', () => this.resize());
     }
@@ -28,13 +41,17 @@ class WebAnimation {
         this.canvas.style.position = 'fixed';
         this.canvas.style.top = '0';
         this.canvas.style.left = '0';
-        this.canvas.style.zIndex = '-1';
+        this.canvas.style.width = '100%';
+        this.canvas.style.height = '100%';
+        this.canvas.style.zIndex = '-10';
         this.canvas.style.pointerEvents = 'none';
+        console.log(`Canvas ${this.canvas.id} positioned with z-index:`, this.canvas.style.zIndex);
     }
     
     resize() {
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
+        console.log('Canvas resized to:', this.canvas.width, 'x', this.canvas.height);
     }
     
     updateColorsFromCSS() {
@@ -43,6 +60,12 @@ class WebAnimation {
         const primaryLight = getComputedStyle(root).getPropertyValue('--primary-light').trim();
         const animationBg = getComputedStyle(root).getPropertyValue('--animation-bg').trim();
         
+        console.log(`[${this.canvas.id}] Reading colors from CSS:`, {
+            primaryColor,
+            primaryLight,
+            animationBg
+        });
+        
         if (primaryColor && primaryColor !== '') {
             this.colors.primary = primaryColor;
             this.colors.primaryRgb = this.hexToRgb(primaryColor);
@@ -50,12 +73,19 @@ class WebAnimation {
         
         if (primaryLight && primaryLight !== '') {
             this.colors.light = primaryLight;
-            this.colors.lightRgb = this.hexToRgb(primaryLight);
+            // Handle both hex and rgb formats for primary-light
+            if (primaryLight.startsWith('#')) {
+                this.colors.lightRgb = this.hexToRgb(primaryLight);
+            } else if (primaryLight.startsWith('rgb')) {
+                this.colors.lightRgb = this.parseRgbString(primaryLight);
+            }
         }
         
         if (animationBg && animationBg !== '') {
             this.colors.backgroundRgb = this.parseRgbString(animationBg);
         }
+        
+        console.log(`[${this.canvas.id}] Final colors:`, this.colors);
     }
     
     hexToRgb(hex) {
@@ -100,6 +130,7 @@ class WebAnimation {
     createNodes() {
         const nodeCount = Math.floor((this.canvas.width * this.canvas.height) / 20000);
         this.nodes = [];
+        console.log('Creating', nodeCount, 'nodes for canvas', this.canvas.width, 'x', this.canvas.height);
         
         for (let i = 0; i < nodeCount; i++) {
             this.nodes.push({
@@ -110,6 +141,7 @@ class WebAnimation {
                 radius: Math.random() * 4 + 3
             });
         }
+        console.log('Created', this.nodes.length, 'nodes');
     }
     
     updateNodes() {
@@ -158,6 +190,7 @@ class WebAnimation {
     }
     
     draw() {
+        // Clear with transparent background to show CSS gradient behind
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
         // Draw connections
@@ -192,6 +225,11 @@ class WebAnimation {
         this.animationId = requestAnimationFrame(() => this.animate());
     }
     
+    // Add debug method to check if animation is running
+    logStatus() {
+        console.log(`Animation status: ${this.nodes.length} nodes, ${this.connections.length} connections, animating: ${!!this.animationId}`);
+    }
+    
     destroy() {
         if (this.animationId) {
             cancelAnimationFrame(this.animationId);
@@ -199,17 +237,66 @@ class WebAnimation {
     }
 }
 
-// Global animation instance
+// Global animation instances
 let webAnimationInstance = null;
+let adminAnimationInstance = null;
+
+// Function to initialize admin animation
+function initAdminAnimation() {
+    const adminCanvas = document.getElementById('adminWebBackground');
+    console.log('Trying to init admin animation, canvas found:', !!adminCanvas);
+    console.log('Canvas dimensions:', adminCanvas ? `${adminCanvas.width}x${adminCanvas.height}` : 'N/A');
+    console.log('Canvas visible:', adminCanvas ? !adminCanvas.closest('.hidden') : 'N/A');
+    
+    if (adminCanvas && !adminAnimationInstance) {
+        try {
+            adminAnimationInstance = new WebAnimation('adminWebBackground');
+            
+            // Force color update after initialization to ensure latest colors are used
+            setTimeout(() => {
+                if (adminAnimationInstance) {
+                    adminAnimationInstance.updateColorsFromCSS();
+                    console.log('Admin animation colors refreshed');
+                }
+            }, 100);
+            
+            console.log('Admin animation initialized successfully');
+        } catch (error) {
+            console.error('Error initializing admin animation:', error);
+        }
+    } else if (adminAnimationInstance) {
+        // If already exists, just refresh colors to ensure they're current
+        adminAnimationInstance.updateColorsFromCSS();
+        console.log('Admin animation already exists, colors refreshed');
+    }
+}
 
 // Initialize animation when page loads
 document.addEventListener('DOMContentLoaded', () => {
-    webAnimationInstance = new WebAnimation('webBackground');
+    // Initialize homepage animation if canvas exists
+    const homeCanvas = document.getElementById('webBackground');
+    if (homeCanvas) {
+        webAnimationInstance = new WebAnimation('webBackground');
+    }
+    
+    // Don't initialize admin animation here - it will be called when admin page is shown
 });
+
+// Make the admin animation initialization available globally
+window.initAdminAnimation = initAdminAnimation;
 
 // Global function to update animation colors
 window.updateAnimationColors = function(primaryColor, variations) {
+    console.log('Updating animation colors for all instances:', { primaryColor, variations });
+    
     if (webAnimationInstance) {
         webAnimationInstance.updateColors(primaryColor, variations);
+        console.log('Homepage animation colors updated');
+    }
+    if (adminAnimationInstance) {
+        adminAnimationInstance.updateColors(primaryColor, variations);
+        // Also force a refresh from CSS to ensure consistency
+        adminAnimationInstance.updateColorsFromCSS();
+        console.log('Admin animation colors updated');
     }
 };

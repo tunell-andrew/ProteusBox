@@ -49,6 +49,9 @@
 
     <!-- Admin Page -->
     <div id="adminPage" class="admin-page hidden">
+        <!-- Animated Background Canvas -->
+        <canvas id="adminWebBackground" class="web-background"></canvas>
+        
         <div class="container">
             <header class="splash-screen">
                 <h1 class="title" id="adminTitle">Local Network Hub</h1>
@@ -193,7 +196,7 @@
                             </div>
                             <div class="project-editor">
                                 <input type="text" id="projectTitle" placeholder="Project title" class="form-input" />
-                                <div id="projectEditor" contenteditable="true" class="rich-editor" style="height:400px;"></div>
+                                <div id="projectEditor" contenteditable="true" class="rich-editor"></div>
                                 <div id="editorToolbar" class="markdown-toolbar">
                                     <button type="button" onmousedown="formatDoc(event, 'bold')"><strong>B</strong></button>
                                     <button type="button" onmousedown="formatDoc(event, 'italic')"><em>I</em></button>
