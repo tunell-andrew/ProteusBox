@@ -105,6 +105,14 @@ function showAdminPage() {
     document.getElementById('mainPage').classList.add('hidden');
     document.getElementById('adminPage').classList.remove('hidden');
     
+    // Initialize admin animation when page becomes visible
+    if (window.initAdminAnimation) {
+        setTimeout(() => {
+            console.log('About to initialize admin animation...');
+            window.initAdminAnimation();
+        }, 500); // Longer delay to ensure page is fully shown and rendered
+    }
+    
     if (isAdminLoggedIn) {
         showAdminPanel();
     } else {
@@ -2421,7 +2429,8 @@ async function sendMessage() {
             hideTypingIndicator();
             
             if (result && result.choices && result.choices[0] && result.choices[0].message) {
-                addMessageToChat('AI Assistant', result.choices[0].message.content, 'bot');
+                const cleanText = processResponseText(result.choices[0].message.content);
+                addMessageToChat('AI Assistant', cleanText, 'bot');
             } else {
                 addMessageToChat('AI Assistant', 'Sorry, I encountered an error processing your request.', 'bot');
             }
@@ -2816,11 +2825,22 @@ async function openProjectFile(filename) {
     }
 }
 
-function createNewProjectFile() {
+async function createNewProjectFile() {
+    // Save current file silently before creating new one
+    if (currentProjectFile || document.getElementById('projectTitle').value.trim()) {
+        await saveProjectFile(true);
+    }
+    
     currentProjectFile = '';
     document.getElementById('projectTitle').value = '';
     const editorEl = document.getElementById('projectEditor');
     if (editorEl) editorEl.innerHTML = '';
+    
+    // Refresh file list to show any newly saved file
+    loadProjectFiles();
+    
+    // Update preview
+    updateProjectPreview();
 }
 
 async function saveProjectFile() {
@@ -2876,7 +2896,10 @@ async function deleteProjectFile() {
         try { result = await res.json(); } catch(e) { /* empty body */ }
         if ((result && result.success) || res.ok) {
             currentProjectFile = '';
-            createNewProjectFile();
+            // Clear the editor without trying to save
+            document.getElementById('projectTitle').value = '';
+            const editorEl = document.getElementById('projectEditor');
+            if (editorEl) editorEl.innerHTML = '';
             loadProjectFiles();
             showFeedback('File deleted', 'success');
         } else {
@@ -2950,11 +2973,7 @@ function updateProjectPreview() {
     }
 }
 
-// also update preview when create new
-function createNewProjectFile() {
-    // ... existing modifications ...
-    updateProjectPreview();
-}
+// also update preview when create new is handled in main createNewProjectFile function
 
 function formatDoc(e, cmd){
     e.preventDefault();
