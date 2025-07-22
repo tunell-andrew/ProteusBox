@@ -1,7 +1,10 @@
 # ServerCrate
 
 ServerCrate is a lightweight, Docker-packaged **local-network hub** that brings together:
+- It is *in my opinion* a big improvement from Heimendal, which I was prevously using.
+- It serves all the same functionality, but with more customizability and AI features! 'COOL'
 
+-- Features --
 * 📂  Categorised link dashboard – organise internal services and external sites into filterable categories.
 * 🤖  AI Assistant – chat with either **Flowise** (default) or **Ollama** models right from the home page.
 * 📝  Markdown-based **Project notes** editor – create, autosave and manage rich-text `.md` files via the admin panel.
@@ -30,7 +33,7 @@ The script:
 3. Starts the stack in detached mode (`docker compose up -d`).
 
 > **Credentials**  
-> *Default admin password:* `password` (override via `ADMIN_PASSWORD` env var/compose).  
+**> *Default admin password: is set in the compose file! Make sure to change it! **
 > *Application port:* Host **7111** → Container **3000**.
 
 ---
@@ -44,35 +47,12 @@ git pull              # fetch latest code
 ```
 Your runtime data (JSON + project markdown) lives in `~/ServerCrate/data` on the host and is preserved.
 
----
-## 3. Directory Overview
 
-```
-├── Dockerfile              # Node + production build
-├── docker-compose.yml      # Exposes port 7111, mounts ./data
-├── build-and-run.sh        # helper script (stop → build → up)
-├── server.js               # Express backend & API routes
-├── public/                 # Static frontend (HTML/CSS/JS)
-│   ├── index.html
-│   ├── script.js           # Main client logic
-│   └── styles.css          # Glass-morphism theme
-└── data/                   # Volume mount – links, categories, project files, etc.
-```
 
----
-## 4. Customisation Highlights
+## 3. Customisation Highlights
 
 * **AI Providers** – Admin → Settings → *AI Chat Configuration*  
   • *Flowise* – supply API URL + Chatflow ID.  
   • *Ollama*  – supply base URL + select model (project proxies to avoid CORS).
 * **Theme Colour** – pick any hex; gradients, buttons and favicon recolour instantly.
 * **Autosave Project Notes** – edits save every 2 s and on tab switch; files stored as Markdown under `data/projects/`.
-
----
-## 5. Development Notes
-
-* Node 18-alpine base image.
-* Front-end rich editor uses `contenteditable`, Marked.js (Markdown→HTML) and Turndown (HTML→Markdown).
-* `.gitignore` excludes `/data/*` and `/.claude/` (local AI settings).
-
-Feel free to open issues or PRs on [GitHub](https://github.com/tunell-andrew/ServerCrate). 
