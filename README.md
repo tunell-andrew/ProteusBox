@@ -1,6 +1,6 @@
-# ServerCrate
+# ProteusBox
 
-ServerCrate is a lightweight, Docker-packaged **local-network hub** that brings together:
+ProteusBox is a lightweight, Docker-packaged **local-network hub** that brings together:
 - It is *in my opinion* a big improvement from Heimendal, which I was prevously using.
 - It serves all the same functionality, but with more customizability and AI features! 'COOL'
 
